@@ -4,10 +4,14 @@ from turtle import *
 
 speed(0)
 pensize(5)
-tracer(10)
+tracer(50)
 penup()
 goto(0,0)
 color("black")
+
+screen = Screen()
+width = screen.window_width()
+height = screen.window_height()
 
 C1 = None
 C2 = None
@@ -76,21 +80,20 @@ def vertice_base():
 #calcular nuevas coordenadas después de la rotación
 def rotar_puntos(cx, cy, angulo,c):
     rad = angulo*(math.pi/180) #convertir a radian
-#     cx=0
-#     cy=0
+
     for rows in range(4):
          x_inicial = c[rows][0]-cx
          y_inicial = c[rows][1]-cy
 
-         x_nuevo =  x_inicial*math.cos(rad) - y_inicial*math.sin(rad)+cx
-         y_nuevo =  x_inicial*math.sin(rad) + y_inicial*math.cos(rad)+cy
+         x_nuevo =  x_inicial*math.cos(angulo) - y_inicial*math.sin(angulo)+cx
+         y_nuevo =  x_inicial*math.sin(angulo) + y_inicial*math.cos(angulo)+cy
          
          c[rows] = [x_nuevo,y_nuevo]
 
 
 def dibujar_cubo():
      global C1,C2
-     x,y = 0,0
+     
      angulo_inicial=1
 
      angulo_inicial += 1
@@ -107,9 +110,7 @@ def dibujar_cubo():
      update()
 
      #ajustar la velocidad
-     # if angulo_inicial >= 360:
-     #      angulo_inicial -= 360
-     time.sleep(0.1)
+     time.sleep(0.09)
 
 
 
@@ -122,33 +123,42 @@ angulo_inicial = 1
 def movimiento(pendiente_x=1,pendiente_y=0):
      global x,y
 
-     if(pendiente_x==1):
-          x = x+10
-     if(pendiente_x==-1):
-          x = x-10
-     if(pendiente_y==1):
-          y = y+10
-     if(pendiente_y==-1):
-          y= y-10
+     x += pendiente_x * 10
+     y += pendiente_y * 10
 
-screen = Screen()
-width = screen.window_width()
-height = screen.window_height()
+     if x > width / 2 - 100:
+        x = width / 2 - 100
+     elif x < -width / 2 + 100:
+        x = -width / 2 + 100
 
-direccion = 1
+     if y > height / 2 - 100:
+        y = height / 2 - 100
+     elif y < -height / 2 + 100:
+        y = -height / 2 + 100
+
+
+
+direccion_x = 1
+direccion_y = 1
 lim = True
 
 while True:
      clear()
      dibujar_cubo()
      
-     if(x >=140 and lim):
-          direccion = -1
+     if(x >=width/2-100 and lim):
+          direccion_x = -1
           lim = False
-     if (x<=-200 and not lim):
-          direccion = 1
+     if (x<=-width/2+100 and not lim):
+          direccion_x = 1
           lim = True
-     movimiento()
+     if (y>=height/2-100 and lim):
+          direccion_y = -1
+          lim = False
+     if (y<=-height/2+100 and not lim):
+          direccion_y = 1
+          lim = True
+     movimiento(direccion_x,direccion_y)
      
 
 done()
